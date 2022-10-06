@@ -35,6 +35,7 @@ const ChooseSessionFormat = styled.div`
     width: 100%;
     height: 100%;
     padding: 0 27.5px;
+    margin-bottom: 117px;
     h1{
         height: 100px;
         font-family: "Roboto";

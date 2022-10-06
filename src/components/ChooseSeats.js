@@ -16,8 +16,6 @@ export default function ChoseSeats({setTicket}) {
         cpf: cpf
     }
     const [seatsSelecteds, setSeatsSelecteds] = useState([])
-    console.log(post)
-    console.log(name, cpf)
 
     useEffect(()=>{
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${sessionId}/seats`)
@@ -25,11 +23,19 @@ export default function ChoseSeats({setTicket}) {
         promise.catch((sim)=>console.log(sim.data))
     }, [sessionId])
 
-    function statusCheck(status){
+    function statusCheckColor(status){
         if (status.isAvailable===true){
             return (selected.includes(status.id) ? "#1AAE9E" : "#C3CFD9")
         } else {
             return "#FBE192"
+        }
+    }
+
+    function statusCheckBorder(status){
+        if (status.isAvailable===true){
+            return (selected.includes(status.id) ? "#0E7D71" : "#7B8B99")
+        } else {
+            return "#F7C52B"
         }
     }
 
@@ -69,7 +75,7 @@ export default function ChoseSeats({setTicket}) {
             <h1>Selecione o(s) assento(s)</h1>
 
             <AllSeats>
-                {seats.length !== 0 && seats.seats.map((s, i)=> <Seat onClick={()=>selectAndDeselect(s)} iconColor={()=> statusCheck(s)} key={i}>{s.name}</Seat>)}
+                {seats.length !== 0 && seats.seats.map((s, i)=> <Seat onClick={()=>selectAndDeselect(s)} iconBorder={()=> statusCheckBorder(s)} iconColor={()=> statusCheckColor(s)} key={i}>{s.name}</Seat>)}
             </AllSeats>
 
             <SeatKeys>
@@ -87,8 +93,8 @@ export default function ChoseSeats({setTicket}) {
                 </div>
             </SeatKeys>
             <form>
-                <input type="text" placeholder="Digite seu nome..." onChange={(e)=>setName(e.target.value)}></input>
-                <input type="text" placeholder="Digite seu CPF..." onChange={(e)=> setCpf(e.target.value)}></input>
+                <label>Nome do comprador:<input type="text" placeholder="Digite seu nome..." onChange={(e)=>setName(e.target.value)}></input></label>
+                <label>CPF do comprador:<input type="text" placeholder="Digite seu CPF..." onChange={(e)=> setCpf(e.target.value)}></input></label>
                 <Link to="/sucesso">
                     <button type="submit" onClick={()=>postTicket(seats)}>Reservar assento(s)</button>
                 </Link>
@@ -111,6 +117,7 @@ const ChooseSeatsFormat = styled.div`
     width: 100%;
     height: 100%;
     padding: 0 20.5px 0 20.5px;
+    margin-bottom: 117px;
     h1{
         height: 100px;
         font-family: "Roboto";
@@ -123,9 +130,45 @@ const ChooseSeatsFormat = styled.div`
     form{
         display: flex;
         flex-direction: column;
-        button{
-            width: 100%;
+        align-items: center;
+        label{
+            font-family: "Roboto";
+            font-size: 18px;
         }
+        input{
+            width: 327px;
+            height: 51px;
+            border-radius: 3px;
+            border: 1px solid #D4D4D4;
+            background-color: #FFFFFF;
+            margin-top: 5px;
+            margin-bottom: 10.5px;
+            padding-left: 18px;
+            color: #293845;
+            font-family: "Roboto";
+            font-size: 18px;
+            &::placeholder{
+                color: #AFAFAF;
+                font-family: "Roboto";
+                font-size: 18px;
+                font-style: italic;
+                font-weight: 400;
+            }
+        }
+        button{
+        width: 225px;
+        height: 42px;
+        margin-right: 8px;
+        margin-top: 57px;
+        margin-bottom: 30px;
+        background-color: #E8833A;
+        border: none;
+        border-radius: 3px;
+        font-family: "Roboto";
+        font-size: 18px;
+        color: #FFFFFF;
+        cursor: pointer;
+    }
     }
 `
 const SeatsFooter = styled.div`
@@ -173,9 +216,12 @@ const Seat = styled.div`
     height: 26px;
     border-radius: 12px;
     background-color: ${props=> props.iconColor};
+    border: 1px solid ${props=> props.iconBorder};
     margin-left: 5px;
     margin-right: 3.5px;
     margin-bottom: 18px;
+    font-family: Roboto;
+    font-size: 11px;
 `
 const SeatKeys = styled.span`
     display: flex;
@@ -186,12 +232,17 @@ const SeatKeys = styled.span`
         flex-direction: column;
         align-items: center;
     }
+    p{
+        font-family: "Roboto";
+        font-size: 13px;
+    }
 `
 const GrayKey = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 12px;
     background-color: #C3CFD9;
+    border: 1px solid #7B8B99;
 `
 
 const GreenKey = styled.div`
@@ -199,10 +250,12 @@ const GreenKey = styled.div`
     height: 26px;
     border-radius: 12px;
     background-color: #1AAE9E;
+    border: 1px solid #0E7D71
 `
 const YellowKey = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 12px;
     background-color: #FBE192;
+    border: 1px solid #F7C52B;
 `
