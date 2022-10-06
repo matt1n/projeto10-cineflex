@@ -4,7 +4,7 @@ import styled from "styled-components"
 export default function MovieCards({sim}) {
     return(
         <MovieCardsFormat>
-            <Link to="/sessoes">
+            <Link to={`/sessoes/${sim.id}`}>
                 <img src={sim.posterURL} alt={"poster do filme " + sim.title}/>
             </Link>
         </MovieCardsFormat>

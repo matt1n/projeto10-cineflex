@@ -4,7 +4,7 @@ import styled from "styled-components"
 export default function Header() {
     return (
     <HeaderFormat>
-        <p><Link to="/">CineFlex</Link></p>
+        <p><Link to="/">CINEFLEX</Link></p>
     </HeaderFormat>
     )
 };

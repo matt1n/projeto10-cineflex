@@ -1,17 +1,20 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import SessionDays from "./SessionDays"
 
 export default function ChooseSession() {
+
+    const {movieId} = useParams()
             
     const [session, setSession] = useState([])
 
     useEffect(()=> {
-        const promise = axios.get("https://mock-api.driven.com.br/api/v8/cineflex/movies/5/showtimes")
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${movieId}/showtimes`)
         promise.then((sim)=> setSession(sim.data))
         promise.catch((sim)=> setSession(sim.release.data))
-    }, [])
+    }, [movieId])
     
     return (
         <ChooseSessionFormat>

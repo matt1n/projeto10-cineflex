@@ -6,7 +6,7 @@ export default function SessionDays({s}) {
         <SessionDaysFormat>
             <p>{s.weekday + " " + s.date}</p>
             {s.showtimes.map((st, i)=>
-            <Link key={st.id} to="/assentos">
+            <Link key={st.id} to={`/assentos/${st.id}`}>
                 <button > {st.name} </button>
             </Link>
             )}

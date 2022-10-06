@@ -1,21 +1,65 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import styled from "styled-components"
 
-export default function ChoseSeats() {
+export default function ChoseSeats({setTicket}) {
     
     const [seats, setSeats] = useState([])
     const [name, setName] = useState("")
     const [cpf, setCpf] = useState("")
-
+    const {sessionId} = useParams()
+    const [selected, setSelected] = useState([])
+    const post = {
+        ids:selected,
+        name: name,
+        cpf: cpf
+    }
+    const [seatsSelecteds, setSeatsSelecteds] = useState([])
+    console.log(post)
     console.log(name, cpf)
 
     useEffect(()=>{
-        const promise = axios.get('https://mock-api.driven.com.br/api/v5/cineflex/showtimes/65/seats')
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${sessionId}/seats`)
         promise.then((sim)=>setSeats(sim.data))
         promise.catch((sim)=>console.log(sim.data))
-    }, [])
+    }, [sessionId])
+
+    function statusCheck(status){
+        if (status.isAvailable===true){
+            return (selected.includes(status.id) ? "#1AAE9E" : "#C3CFD9")
+        } else {
+            return "#FBE192"
+        }
+    }
+
+    function selectAndDeselect(status){
+        if (status.isAvailable===true){
+            if (!selected.includes(status.id)) {
+                setSelected([...selected, status.id])
+                setSeatsSelecteds([...seatsSelecteds, status.name])
+            } else {
+                const idsFiltered = selected.filter((ids)=> ids!==status.id)
+                setSelected([...idsFiltered])
+                const namesFiltered = seatsSelecteds.filter((names)=> names!==status.name)
+                setSeatsSelecteds([...namesFiltered])
+            }
+        }
+    }
+
+    function postTicket(seats){
+        setTicket({
+            title:seats.movie.title,
+            day:seats.day.date,
+            hour:seats.name,
+            seats:seatsSelecteds,
+            name:name,
+            cpf:cpf
+        })
+        const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", post)
+        promise.then((sim)=>console.log(sim.data))
+        promise.catch((sim)=>console.log(sim.release.data))
+    }
 
     console.log(seats)
 
@@ -25,28 +69,28 @@ export default function ChoseSeats() {
             <h1>Selecione o(s) assento(s)</h1>
 
             <AllSeats>
-                {seats.length !== 0 && seats.seats.map((s, i)=> <Seat>{s.name}</Seat>)}
+                {seats.length !== 0 && seats.seats.map((s, i)=> <Seat onClick={()=>selectAndDeselect(s)} iconColor={()=> statusCheck(s)} key={i}>{s.name}</Seat>)}
             </AllSeats>
 
             <SeatKeys>
                 <div>
-                    <IconKey></IconKey>
+                    <GreenKey></GreenKey>
                     <p>Selecionado</p>
                 </div>
                 <div>
-                    <IconKey></IconKey>
+                    <GrayKey></GrayKey>
                     <p>Disponível</p>
                 </div>
                 <div>
-                    <IconKey></IconKey>
+                    <YellowKey></YellowKey>
                     <p>Indisponível</p>
                 </div>
             </SeatKeys>
-            <form /*onSubmit={}*/>
+            <form>
                 <input type="text" placeholder="Digite seu nome..." onChange={(e)=>setName(e.target.value)}></input>
                 <input type="text" placeholder="Digite seu CPF..." onChange={(e)=> setCpf(e.target.value)}></input>
                 <Link to="/sucesso">
-                    <button type="submit">Reservar assento(s)</button>
+                    <button type="submit" onClick={()=>postTicket(seats)}>Reservar assento(s)</button>
                 </Link>
             </form>
             <SeatsFooter>
@@ -128,7 +172,7 @@ const Seat = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 12px;
-    background-color: #C3CFD9;
+    background-color: ${props=> props.iconColor};
     margin-left: 5px;
     margin-right: 3.5px;
     margin-bottom: 18px;
@@ -143,9 +187,22 @@ const SeatKeys = styled.span`
         align-items: center;
     }
 `
-const IconKey = styled.div`
+const GrayKey = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 12px;
     background-color: #C3CFD9;
+`
+
+const GreenKey = styled.div`
+    width: 26px;
+    height: 26px;
+    border-radius: 12px;
+    background-color: #1AAE9E;
+`
+const YellowKey = styled.div`
+    width: 26px;
+    height: 26px;
+    border-radius: 12px;
+    background-color: #FBE192;
 `

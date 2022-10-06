@@ -17,7 +17,7 @@ export default function ChooseMovie() {
         <ChooseMovieFormat>
             <p>Selecione o Filme</p>
             <span>
-                {movie.map((sim, i) => <MovieCards sim={sim}/>)}
+                {movie.map((sim, i) => <MovieCards key={i} sim={sim}/>)}
             </span> 
         </ChooseMovieFormat>
     )
