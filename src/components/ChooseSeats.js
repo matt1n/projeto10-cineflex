@@ -1,21 +1,22 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 
-export default function ChoseSeats({setTicket}) {
+export default function ChoseSeats({setTicket, dark}) {
     
     const [seats, setSeats] = useState([])
     const [name, setName] = useState("")
     const [cpf, setCpf] = useState("")
     const {sessionId} = useParams()
     const [selected, setSelected] = useState([])
-    const post = {
+    const body = {
         ids:selected,
-        name: name,
-        cpf: cpf
+        name,
+        cpf
     }
     const [seatsSelecteds, setSeatsSelecteds] = useState([])
+    const navigate = useNavigate()
 
     useEffect(()=>{
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${sessionId}/seats`)
@@ -53,24 +54,31 @@ export default function ChoseSeats({setTicket}) {
         }
     }
 
-    function postTicket(seats){
-        setTicket({
-            title:seats.movie.title,
-            day:seats.day.date,
-            hour:seats.name,
-            seats:seatsSelecteds,
-            name:name,
-            cpf:cpf
-        })
-        const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", post)
-        promise.then((sim)=>console.log(sim.data))
-        promise.catch((sim)=>console.log(sim.release.data))
+    function postTicket(e){
+       
+        e.preventDefault();
+        
+        if(selected.length!==0){
+            setTicket({
+                title:seats.movie.title,
+                day:seats.day.date,
+                hour:seats.name,
+                seats:seatsSelecteds,
+                name:name,
+                cpf:cpf
+            })
+            const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", body)
+            promise.then(navigate("/sucesso"))
+            promise.catch((sim)=>console.log(sim.release.data))
+        } else {
+            alert('Selecione um assento!')
+        }
     }
 
     console.log(seats)
 
     return (
-        <ChooseSeatsFormat>
+        <ChooseSeatsFormat dark={dark}>
 
             <h1>Selecione o(s) assento(s)</h1>
 
@@ -78,7 +86,7 @@ export default function ChoseSeats({setTicket}) {
                 {seats.length !== 0 && seats.seats.map((s, i)=> <Seat onClick={()=>selectAndDeselect(s)} iconBorder={()=> statusCheckBorder(s)} iconColor={()=> statusCheckColor(s)} key={i}>{s.name}</Seat>)}
             </AllSeats>
 
-            <SeatKeys>
+            <SeatKeys dark={dark}>
                 <div>
                     <GreenKey></GreenKey>
                     <p>Selecionado</p>
@@ -92,14 +100,30 @@ export default function ChoseSeats({setTicket}) {
                     <p>Indisponível</p>
                 </div>
             </SeatKeys>
-            <form>
-                <label>Nome do comprador:<input type="text" placeholder="Digite seu nome..." onChange={(e)=>setName(e.target.value)}></input></label>
-                <label>CPF do comprador:<input type="text" placeholder="Digite seu CPF..." onChange={(e)=> setCpf(e.target.value)}></input></label>
-                <Link to="/sucesso">
-                    <button type="submit" onClick={()=>postTicket(seats)}>Reservar assento(s)</button>
-                </Link>
+            <form onSubmit={postTicket}>
+                <label>Nome do comprador:
+                    <input required 
+                    type="text" 
+                    value={name} 
+                    placeholder="Digite seu nome..." 
+                    onChange={(e)=>setName(e.target.value)}>
+                    </input>
+                </label>
+                
+                <label>CPF do comprador:
+                    <input 
+                    required 
+                    type="number" 
+                    min="10000000000"
+                    max="99999999999"
+                    value={cpf} 
+                    placeholder="Digite seu CPF..." 
+                    onChange={(e)=> setCpf(e.target.value)}>
+                    </input>
+                </label>
+                <button type="submit">Reservar assento(s)</button>
             </form>
-            <SeatsFooter>
+            <SeatsFooter dark={dark}>
                 <div>
                     {seats.length !== 0 && <img src={seats.movie.posterURL} alt={`Poster ${seats.movie.title}`}/>}
                 </div>
@@ -118,11 +142,12 @@ const ChooseSeatsFormat = styled.div`
     height: 100%;
     padding: 0 20.5px 0 20.5px;
     margin-bottom: 117px;
+    background-color: ${props=> props.dark===false ? "#ffffff" : '#333333'};
     h1{
         height: 100px;
         font-family: "Roboto";
         font-size: 24px;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
         display: flex;
         align-items: center;
         justify-content: center;
@@ -134,9 +159,10 @@ const ChooseSeatsFormat = styled.div`
         label{
             font-family: "Roboto";
             font-size: 18px;
+            color: ${props=> props.dark===false ? '#000000' : '#ffffff'};
         }
         input{
-            width: 327px;
+            width: 100%;
             height: 51px;
             border-radius: 3px;
             border: 1px solid #D4D4D4;
@@ -154,6 +180,16 @@ const ChooseSeatsFormat = styled.div`
                 font-style: italic;
                 font-weight: 400;
             }
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+        -moz-appearance: textfield;
         }
         button{
         width: 225px;
@@ -177,7 +213,7 @@ const SeatsFooter = styled.div`
     left: 0;
     width: 100%;
     height: 117px;
-    background-color: #DFE6ED;
+    background-color: ${props=>props.dark ? "#0a0a0a" : " #DFE6ED"};
     display: flex;
     align-items: center;
     div{
@@ -187,7 +223,7 @@ const SeatsFooter = styled.div`
         justify-content: center;
         align-items: center;
         border-radius: 2px;
-        background-color: #FFFFFF;
+        background-color: ${props=> props.dark===false ? '#fffffff':'#E8833A'};
         margin-right: 14px;
         margin-left: 10px;
     }
@@ -198,7 +234,7 @@ const SeatsFooter = styled.div`
     h2{
         font-family: 'Roboto';
         font-size: 26px;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
     }
     span{
         display: block;
@@ -235,6 +271,7 @@ const SeatKeys = styled.span`
     p{
         font-family: "Roboto";
         font-size: 13px;
+        color: ${props=> props.dark===false ? '#000000' : '#ffffff'};
     }
 `
 const GrayKey = styled.div`

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import SessionDays from "./SessionDays"
 
-export default function ChooseSession() {
+export default function ChooseSession({dark}) {
 
     const {movieId} = useParams()
             
@@ -17,10 +17,10 @@ export default function ChooseSession() {
     }, [movieId])
     
     return (
-        <ChooseSessionFormat>
+        <ChooseSessionFormat dark={dark}>
             <h1>Selecione o Horário</h1>
-            {session.length!==0 && session.days.map((s, i)=> <SessionDays key={s.id} s={s}/>)}
-            <SessionFooter>
+            {session.length!==0 && session.days.map((s, i)=> <SessionDays key={s.id} s={s} dark={dark}/>)}
+            <SessionFooter dark={dark}>
                 <div>
                     <img src={session.posterURL} alt={`Poster ${session.title}`}/>
                 </div>
@@ -36,11 +36,12 @@ const ChooseSessionFormat = styled.div`
     height: 100%;
     padding: 0 27.5px;
     margin-bottom: 117px;
+    background-color: ${props=> props.dark===false ? "#ffffff" : '#333333'};
     h1{
         height: 100px;
         font-family: "Roboto";
         font-size: 24px;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
         display: flex;
         align-items: center;
         justify-content: center;
@@ -55,6 +56,7 @@ const SessionFooter= styled.div`
     background-color: #DFE6ED;
     display: flex;
     align-items: center;
+    background-color: ${props=>props.dark ? "#0a0a0a" : "#C3CFD9"};
     div{
         width: 64px;
         height: 89px;
@@ -62,7 +64,7 @@ const SessionFooter= styled.div`
         justify-content: center;
         align-items: center;
         border-radius: 2px;
-        background-color: #FFFFFF;
+        background-color: ${props=> props.dark===false ? '#fffffff':'#E8833A'};
         margin-right: 14px;
         margin-left: 10px;
     }
@@ -73,6 +75,6 @@ const SessionFooter= styled.div`
     h2{
         font-family: 'Roboto';
         font-size: 26px;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
     }
 `

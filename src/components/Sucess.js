@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
-export default function Sucess({ticket}) {
+export default function Sucess({ticket,dark}) {
     return(
-        <SucessFormat>
+        <SucessFormat dark={dark}>
             <h1>Pedido feito <br/> com sucesso!</h1>
             <h2>Filme e sessão</h2>
             <div>
@@ -30,12 +30,13 @@ const SucessFormat = styled.div`
     width: 100%;
     height: 100%;
     padding: 0 29px;
+    background-color: ${props=> props.dark===false ? "#ffffff" : '#333333'};
     h1{
         height: 100px;
         font-family: "Roboto";
         font-size: 24px;
         font-weight: 700;
-        color: #247A6B;
+        color: ${props=> props.dark===false ? "#247A6B" : '#2abf72'};
         text-align: center;
         display: flex;
         align-items: center;
@@ -45,7 +46,7 @@ const SucessFormat = styled.div`
         font-family: "Roboto";
         font-size: 24px;
         font-weight: 700;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
         margin-top: 25px;
     }
     div{
@@ -56,7 +57,7 @@ const SucessFormat = styled.div`
         font-family: "Roboto";
         font-size: 22px;
         font-weight: 400;
-        color: #293845;
+        color: ${props=> props.dark===false ? '#293845' : '#ffffff'};
         margin-top: 5px;
     }
     span{
@@ -68,7 +69,7 @@ const SucessFormat = styled.div`
         width: 225px;
         height: 42px;
         margin-right: 8px;
-        margin-bottom: 30px;
+        margin-bottom: 50px;
         background-color: #E8833A;
         border: none;
         border-radius: 3px;

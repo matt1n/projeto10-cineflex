@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
-export default function MovieCards({sim}) {
+export default function MovieCards({sim, dark}) {
     return(
-        <MovieCardsFormat>
+        <MovieCardsFormat dark={dark}>
             <Link to={`/sessoes/${sim.id}`}>
                 <img src={sim.posterURL} alt={"poster do filme " + sim.title}/>
             </Link>
@@ -19,6 +19,7 @@ const MovieCardsFormat = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: 11px;
+    background-color: ${props=> props.dark===false ? '#fffffff':'#E8833A'};
     img{
         width: 129px;
         height: 193px;
