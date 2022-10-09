@@ -52,6 +52,6 @@ table {
 *{
     box-sizing: border-box;
 }
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;

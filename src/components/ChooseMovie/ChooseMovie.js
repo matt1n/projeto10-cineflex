@@ -2,18 +2,24 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import MovieCards from "./MovieCards";
+import Loading from "../Loading";
 
 export default function ChooseMovie({ dark }) {
   const [movie, setMovie] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const promise = axios.get(
       "https://mock-api.driven.com.br/api/v5/cineflex/movies"
     );
     promise.then((reply) => setMovie(reply.data));
     promise.catch((reply) => console.log(reply.release.data));
   }, []);
-  console.log(movie);
+
+  if (movie.length === 0) {
+    return <Loading dark={dark} />;
+  }
+
   return (
     <ChooseMovieFormat dark={dark}>
       <p>Selecione o Filme</p>
@@ -32,6 +38,7 @@ const ChooseMovieFormat = styled.div`
   padding: 0 27.5px;
   background-color: ${(props) =>
     props.dark === false ? "#ffffff" : "#333333"};
+  margin-top: 67px;
   p {
     height: 100px;
     font-family: "Roboto";

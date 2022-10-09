@@ -41,17 +41,17 @@ export default function SeatsContainer({
 
   return (
     <AllSeats>
-      {seats.length !== 0 &&
-        seats.seats.map((s, i) => (
-          <Seat
-            onClick={() => selectAndDeselect(s)}
-            iconBorder={() => statusCheckBorder(s)}
-            iconColor={() => statusCheckColor(s)}
-            key={i}
-          >
-            {s.name}
-          </Seat>
-        ))}
+      {seats.seats.map((s, i) => (
+        <Seat
+          onClick={() => selectAndDeselect(s)}
+          iconBorder={() => statusCheckBorder(s)}
+          iconColor={() => statusCheckColor(s)}
+          key={i}
+          data-identifier="seat"
+        >
+          {s.name}
+        </Seat>
+      ))}
     </AllSeats>
   );
 }
@@ -59,6 +59,7 @@ export default function SeatsContainer({
 const AllSeats = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 320px;
 `;
 const Seat = styled.div`
   display: flex;
@@ -69,8 +70,8 @@ const Seat = styled.div`
   border-radius: 13px;
   background-color: ${(props) => props.iconColor};
   border: 1px solid ${(props) => props.iconBorder};
-  margin-left: 5px;
-  margin-right: 3.5px;
+  margin-left: 3px;
+  margin-right: 3px;
   margin-bottom: 18px;
   font-family: Roboto;
   font-size: 11px;

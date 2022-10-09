@@ -6,6 +6,7 @@ import ChooseSession from "./ChooseSession/ChooseSession";
 import ChoseSeats from "./ChooseSeats/ChooseSeats";
 import Sucess from "./Sucess";
 import { useState } from "react";
+import FakeBody from "./FakeBody";
 
 export default function App() {
   const [ticket, setTicket] = useState({});
@@ -14,6 +15,7 @@ export default function App() {
     <BrowserRouter>
       <GlobalStyle />
       <Header dark={dark} setDark={setDark} />
+      <FakeBody dark={dark} />
       <Routes>
         <Route path="/" element={<ChooseMovie dark={dark} />}></Route>
         <Route

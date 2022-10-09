@@ -2,9 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import SeatsForm from "../../SeatsForm";
+import SeatsForm from "./SeatsForm";
 import SeatsContainer from "./SeatsContainer";
 import SeatsKey from "./SeatsKey";
+import Loading from "../Loading";
 
 export default function ChoseSeats({ setTicket, dark }) {
   const [seats, setSeats] = useState([]);
@@ -13,12 +14,17 @@ export default function ChoseSeats({ setTicket, dark }) {
   const [seatsSelecteds, setSeatsSelecteds] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const promise = axios.get(
       `https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${sessionId}/seats`
     );
     promise.then((reply) => setSeats(reply.data));
     promise.catch((reply) => console.log(reply.release.data));
   }, [sessionId]);
+
+  if (seats.length === 0) {
+    return <Loading dark={dark} />;
+  }
 
   return (
     <ChooseSeatsFormat dark={dark}>
@@ -42,20 +48,19 @@ export default function ChoseSeats({ setTicket, dark }) {
         seatsSelecteds={seatsSelecteds}
       ></SeatsForm>
 
-      <SeatsFooter dark={dark}>
+      <SeatsFooter
+        dark={dark}
+        data-identifier="movie-and-session-infos-preview"
+      >
         <div>
-          {seats.length !== 0 && (
-            <img
-              src={seats.movie.posterURL}
-              alt={`Poster ${seats.movie.title}`}
-            />
-          )}
+          <img
+            src={seats.movie.posterURL}
+            alt={`Poster ${seats.movie.title}`}
+          />
         </div>
         <span>
-          <h2>{seats.length !== 0 && seats.movie.title}</h2>
-          <h2>
-            {seats.length !== 0 && `${seats.day.weekday} - ${seats.name}`}
-          </h2>
+          <h2>{seats.movie.title}</h2>
+          <h2>{`${seats.day.weekday} - ${seats.name}`}</h2>
         </span>
       </SeatsFooter>
     </ChooseSeatsFormat>
@@ -69,6 +74,10 @@ const ChooseSeatsFormat = styled.div`
   margin-bottom: 117px;
   background-color: ${(props) =>
     props.dark === false ? "#ffffff" : "#333333"};
+  margin-top: 67px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   h1 {
     height: 100px;
     font-family: "Roboto";

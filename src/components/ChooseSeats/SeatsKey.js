@@ -1,28 +1,29 @@
 import styled from "styled-components";
 
-export default function SeatsKey({dark}) {
-    return(
-        <SeatsKeyFormat dark={dark}>
-        <div>
-          <GreenKey></GreenKey>
-          <p>Selecionado</p>
-        </div>
-        <div>
-          <GrayKey></GrayKey>
-          <p>Disponível</p>
-        </div>
-        <div>
-          <YellowKey></YellowKey>
-          <p>Indisponível</p>
-        </div>
-      </SeatsKeyFormat>
-    )
-};
+export default function SeatsKey({ dark }) {
+  return (
+    <SeatsKeyFormat dark={dark}>
+      <div>
+        <GreenKey data-identifier="seat-selected-subtitle"></GreenKey>
+        <p>Selecionado</p>
+      </div>
+      <div>
+        <GrayKey data-identifier="seat-available-subtitle"></GrayKey>
+        <p>Disponível</p>
+      </div>
+      <div>
+        <YellowKey data-identifier="seat-unavailable-subtitle"></YellowKey>
+        <p>Indisponível</p>
+      </div>
+    </SeatsKeyFormat>
+  );
+}
 
 const SeatsKeyFormat = styled.span`
+  width: 275px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 48.5px;
+  margin-bottom: 28.5px;
   div {
     display: flex;
     flex-direction: column;

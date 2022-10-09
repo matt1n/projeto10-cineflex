@@ -3,9 +3,12 @@ import styled from "styled-components";
 
 export default function MovieCards({ movieObject, dark }) {
   return (
-    <MovieCardsFormat dark={dark}>
+    <MovieCardsFormat dark={dark} data-identifier="session-date">
       <Link to={`/sessoes/${movieObject.id}`}>
-        <img src={movieObject.posterURL} alt={"poster do filme " + movieObject.title} />
+        <img
+          src={movieObject.posterURL}
+          alt={"poster do filme " + movieObject.title}
+        />
       </Link>
     </MovieCardsFormat>
   );

@@ -5,12 +5,14 @@ import DarkMode from "./DarkMode";
 
 export default function Header({ dark, setDark }) {
   const navigate = useNavigate();
+  function back() {
+    window.scrollTo(0, 0);
+    navigate(-1);
+  }
   const href = useHref();
   return (
     <HeaderFormat dark={dark}>
-      {href !== "/" && (
-        <BackButton onClick={() => navigate(-1)}>{"< Voltar"}</BackButton>
-      )}
+      {href !== "/" && <BackButton onClick={back}>{"< Voltar"}</BackButton>}
       <h1>
         <StyledLink to="/">CINEFLEX</StyledLink>
       </h1>
@@ -26,7 +28,9 @@ const HeaderFormat = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${(props) => (props.dark ? "#0a0a0a" : "#C3CFD9")};
-  position: relative;
+  position: fixed;
+  right: 0;
+  top: 0;
 `;
 const BackButton = styled.button`
   background-color: #e8833a;
@@ -44,4 +48,5 @@ const StyledLink = styled(Link)`
   font-size: 34px;
   color: #e8833a;
   text-decoration: none;
+  position: relative;
 `;

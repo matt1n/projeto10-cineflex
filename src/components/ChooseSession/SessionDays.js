@@ -4,10 +4,10 @@ import styled from "styled-components";
 export default function SessionDays({ s, dark }) {
   return (
     <SessionDaysFormat dark={dark}>
-      <p>{s.weekday + " " + s.date}</p>
+      <p data-identifier="session-date">{s.weekday + " " + s.date}</p>
       {s.showtimes.map((st, i) => (
         <Link key={st.id} to={`/assentos/${st.id}`}>
-          <button> {st.name} </button>
+          <button data-identifier="hour-minute-btn"> {st.name} </button>
         </Link>
       ))}
     </SessionDaysFormat>

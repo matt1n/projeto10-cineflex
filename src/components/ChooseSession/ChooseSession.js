@@ -2,20 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Loading from "../Loading";
 import SessionDays from "./SessionDays";
 
 export default function ChooseSession({ dark }) {
   const { movieId } = useParams();
-
   const [session, setSession] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const promise = axios.get(
       `https://mock-api.driven.com.br/api/v5/cineflex/movies/${movieId}/showtimes`
     );
     promise.then((reply) => setSession(reply.data));
     promise.catch((reply) => setSession(reply.release.data));
   }, [movieId]);
+
+  if (session.length === 0) {
+    return <Loading dark={dark} />;
+  }
 
   return (
     <ChooseSessionFormat dark={dark}>
@@ -24,11 +29,13 @@ export default function ChooseSession({ dark }) {
         session.days.map((s, i) => (
           <SessionDays key={s.id} s={s} dark={dark} />
         ))}
-      <SessionFooter dark={dark}>
+      <SessionFooter dark={dark} data-identifier="movie-img-preview">
         <div>
           <img src={session.posterURL} alt={`Poster ${session.title}`} />
         </div>
-        <h2>{session.title}</h2>
+        <h2 data-identifier="movie-and-session-infos-preview">
+          {session.title}
+        </h2>
       </SessionFooter>
     </ChooseSessionFormat>
   );
@@ -41,6 +48,7 @@ const ChooseSessionFormat = styled.div`
   margin-bottom: 117px;
   background-color: ${(props) =>
     props.dark === false ? "#ffffff" : "#333333"};
+  margin-top: 67px;
   h1 {
     height: 100px;
     font-family: "Roboto";
@@ -58,6 +66,7 @@ const SessionFooter = styled.div`
   width: 100%;
   height: 117px;
   background-color: #dfe6ed;
+  border-top: 1px solid ${(props) => (props.dark ? "#ab5a1f" : "#9EADBA")};
   display: flex;
   align-items: center;
   background-color: ${(props) => (props.dark ? "#121212" : "#C3CFD9")};

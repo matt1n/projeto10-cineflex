@@ -1,20 +1,39 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Fragment } from "react/cjs/react.production.min";
 import styled from "styled-components";
 
-export default function SeatsForm({dark, seats, selected, setTicket, seatsSelecteds }) {
+export default function SeatsForm({
+  dark,
+  seats,
+  selected,
+  setTicket,
+  seatsSelecteds,
+}) {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [buyers, setBuyers] = useState([]);
   const body = {
     ids: selected,
-    name,
-    cpf,
+    compradores: buyers,
   };
-  
+
   function postTicket(e) {
     e.preventDefault();
+
+    let newBuyers = [];
+    seatsSelecteds.map(
+      (s, i) =>
+        (newBuyers = [
+          ...newBuyers,
+          {
+            idAssento: s,
+            nome: e.target[i * 2].value,
+            cpf: e.target[i * 2 + 1].value,
+          },
+        ])
+    );
+    setBuyers(newBuyers);
 
     if (selected.length !== 0) {
       setTicket({
@@ -22,8 +41,7 @@ export default function SeatsForm({dark, seats, selected, setTicket, seatsSelect
         day: seats.day.date,
         hour: seats.name,
         seats: seatsSelecteds,
-        name: name,
-        cpf: cpf,
+        compradores: newBuyers,
       });
       const promise = axios.post(
         "https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many",
@@ -38,30 +56,35 @@ export default function SeatsForm({dark, seats, selected, setTicket, seatsSelect
 
   return (
     <FormFormat onSubmit={postTicket} dark={dark}>
-      <label>
-        Nome do comprador:
-        <input
-          required
-          type="text"
-          value={name}
-          placeholder="Digite seu nome..."
-          onChange={(e) => setName(e.target.value)}
-        ></input>
-      </label>
+      {seatsSelecteds.map((s, i) => (
+        <Fragment key={i}>
+          <FormSeatNumber dark={dark}>{`Assento ${s}:`}</FormSeatNumber>
+          <label>
+            Nome do comprador:
+            <input
+              required
+              type="text"
+              placeholder="Digite seu nome..."
+              data-identifier="buyer-name-input"
+            ></input>
+          </label>
 
-      <label>
-        CPF do comprador:
-        <input
-          required
-          type="number"
-          min="10000000000"
-          max="99999999999"
-          value={cpf}
-          placeholder="Digite seu CPF..."
-          onChange={(e) => setCpf(e.target.value)}
-        ></input>
-      </label>
-      <button type="submit">Reservar assento(s)</button>
+          <label>
+            CPF do comprador:
+            <input
+              required
+              type="number"
+              min="10000000000"
+              max="99999999999"
+              placeholder="Digite seu CPF..."
+              data-identifier="buyer-cpf-input"
+            ></input>
+          </label>
+        </Fragment>
+      ))}
+      <button type="submit" data-identifier="reservation-btn">
+        Reservar assento(s)
+      </button>
     </FormFormat>
   );
 }
@@ -119,4 +142,17 @@ const FormFormat = styled.form`
     color: #ffffff;
     cursor: pointer;
   }
+`;
+
+const FormSeatNumber = styled.p`
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 38px;
+  margin-top: 20px;
+  font-family: "Roboto";
+  font-size: 24px;
+  color: ${(props) => (props.dark === false ? "#293845" : "#ffffff")};
 `;

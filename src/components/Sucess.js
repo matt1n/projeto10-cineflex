@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 export default function Sucess({ ticket, dark }) {
   const navigate = useNavigate();
+  window.scrollTo(0, 0);
   return (
     <SucessFormat dark={dark}>
       <h1>
@@ -12,27 +12,48 @@ export default function Sucess({ ticket, dark }) {
 
       <Topic dark={dark}>Filme e sessão</Topic>
       <InformationFormat>
-        <Information dark={dark}>{ticket.title}</Information>
-        <Information dark={dark}>{ticket.day + " " + ticket.hour}</Information>
+        <Information
+          dark={dark}
+          data-identifier="movie-session-infos-reserve-finished"
+        >
+          {ticket.title}
+        </Information>
+        <Information
+          dark={dark}
+          data-identifier="movie-session-infos-reserve-finished"
+        >
+          {ticket.day + " " + ticket.hour}
+        </Information>
       </InformationFormat>
 
-      <Topic dark={dark}>Ingressos</Topic>
-      <InformationFormat>
-        {ticket.seats.map((s, i) => (
-          <Information dark={dark} key={i}>
-            Assento {s}
+      <Topic dark={dark}>Comprador por ingressos</Topic>
+      {ticket.compradores.map((s) => (
+        <InformationFormat key={s.idAssento}>
+          <SeatNumber dark={dark} data-identifier="seat-infos-reserve-finished">
+            Assento {s.idAssento}
+          </SeatNumber>
+          <Information
+            dark={dark}
+            data-identifier="buyer-infos-reserve-finished"
+          >
+            Nome: {s.nome}
           </Information>
-        ))}
-      </InformationFormat>
-
-      <Topic dark={dark}>Comprador</Topic>
-      <InformationFormat>
-        <Information dark={dark}>Nome: {ticket.name}</Information>
-        <Information dark={dark}>CPF: {ticket.cpf}</Information>
-      </InformationFormat>
+          <Information
+            dark={dark}
+            data-identifier="buyer-infos-reserve-finished"
+          >
+            CPF: {s.cpf}
+          </Information>
+        </InformationFormat>
+      ))}
 
       <HomeButtonFormat>
-        <HomeButton onClick={() => navigate("/")}>Voltar pra Home</HomeButton>
+        <HomeButton
+          onClick={() => navigate("/")}
+          data-identifier="back-to-home-btn"
+        >
+          Voltar pra Home
+        </HomeButton>
       </HomeButtonFormat>
     </SucessFormat>
   );
@@ -44,6 +65,7 @@ const SucessFormat = styled.div`
   padding: 0 29px;
   background-color: ${(props) =>
     props.dark === false ? "#ffffff" : "#333333"};
+  margin-top: 67px;
   h1 {
     height: 100px;
     font-family: "Roboto";
@@ -73,6 +95,9 @@ const Information = styled.p`
   font-weight: 400;
   color: ${(props) => (props.dark === false ? "#293845" : "#ffffff")};
   margin-top: 5px;
+`;
+const SeatNumber = styled(Information)`
+  font-weight: 700;
 `;
 const HomeButtonFormat = styled.div`
   width: 100%;
