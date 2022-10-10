@@ -17,7 +17,8 @@ export default function MovieCards({ movieObject, dark }) {
 const MovieCardsFormat = styled.div`
   width: 145px;
   height: 209px;
-  box-shadow: 0px 2px 4px 2px #0000001a;
+  border-radius: 3px;
+  box-shadow: 0px 2px 4px 2px ${props=> props.dark ? "#00000030": "#0000001a"};
   display: flex;
   align-items: center;
   justify-content: center;
