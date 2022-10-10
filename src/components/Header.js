@@ -12,7 +12,7 @@ export default function Header({ dark, setDark }) {
   const href = useHref();
   return (
     <HeaderFormat dark={dark}>
-      {href !== "/" && <BackButton onClick={back}>{"< Voltar"}</BackButton>}
+      {href !== "/" && <BackButton onClick={back}>{"<Voltar"}</BackButton>}
       <h1>
         <StyledLink to="/">CINEFLEX</StyledLink>
       </h1>
@@ -33,9 +33,10 @@ const HeaderFormat = styled.div`
   top: 0;
 `;
 const BackButton = styled.button`
+  height: 28px;
   background-color: #e8833a;
   border: none;
-  border-radius: 3px;
+  border-radius: 13px;
   font-family: "Roboto";
   font-size: 20px;
   color: #ffffff;

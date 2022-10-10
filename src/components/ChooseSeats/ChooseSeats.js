@@ -95,6 +95,7 @@ const SeatsFooter = styled.div`
   width: 100%;
   height: 117px;
   background-color: ${(props) => (props.dark ? "#121212" : " #DFE6ED")};
+  border-top: 1px solid ${(props) => (props.dark ? "#ab5a1f" : "#9EADBA")};
   display: flex;
   align-items: center;
   div {

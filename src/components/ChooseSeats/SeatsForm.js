@@ -94,6 +94,7 @@ const FormFormat = styled.form`
   flex-direction: column;
   align-items: center;
   label {
+    width: 100%;
     font-family: "Roboto";
     font-size: 18px;
     color: ${(props) => (props.dark === false ? "#000000" : "#ffffff")};

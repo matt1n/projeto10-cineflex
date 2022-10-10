@@ -28,7 +28,7 @@ export default function SeatsContainer({
       if (!selected.includes(status.id)) {
         setSelected([...selected, status.id]);
         setSeatsSelecteds([...seatsSelecteds, status.name]);
-      } else {
+      } else if (window.confirm("Deseja mesmo desselecionar assento?")){
         const idsFiltered = selected.filter((ids) => ids !== status.id);
         setSelected([...idsFiltered]);
         const namesFiltered = seatsSelecteds.filter(
@@ -36,6 +36,8 @@ export default function SeatsContainer({
         );
         setSeatsSelecteds([...namesFiltered]);
       }
+    } else {
+      alert("Esse assento não está disponível")
     }
   }
 
